@@ -10,7 +10,7 @@
 
 #include <catch.hpp>
 
-#include <api/String.h>
+#include <api/WString.h>
 
 #include "StringPrinter.h"
 

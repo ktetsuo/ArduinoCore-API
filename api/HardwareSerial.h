@@ -101,6 +101,13 @@ class HardwareSerial : public Stream
 };
 
 // XXX: Are we keeping the serialEvent API?
-extern void serialEventRun(void) __attribute__((weak));
+#if defined(__GNUC__)
+#define WEAK_ALIAS(alias_name, target_name) __attribute__((weak, alias(#target_name)))
+#elif defined(_MSC_VER)
+#define WEAK_ALIAS(alias_name, target_name) __pragma(comment(linker, "/alternatename:" #alias_name "=" #target_name))
+#endif
+WEAK_ALIAS(serialEventRun, default_serialEventRun)
+extern void serialEventRun(void);
+#undef WEAK_ALIAS
 
 }

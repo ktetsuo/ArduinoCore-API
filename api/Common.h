@@ -21,6 +21,12 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#if defined(__GNUC__)
+#define WEAK_ALIAS(alias_name, target_name) __attribute__((weak, alias(#target_name)))
+#elif defined(_MSC_VER)
+#define WEAK_ALIAS(alias_name, target_name) __pragma(comment(linker, "/alternatename:" #alias_name "=" #target_name))
+#endif
+
 #ifdef __cplusplus
 extern "C"{
 #endif
@@ -101,9 +107,11 @@ void init(void);
 void initVariant(void);
 
 #ifndef HOST
-int atexit(void (*func)()) __attribute__((weak));
+WEAK_ALIAS(atexit, default_atexit)
+int atexit(void (*func)());
 #endif
-int main() __attribute__((weak));
+WEAK_ALIAS(main, default_main)
+int default_main();
 
 #ifdef EXTENDED_PIN_MODE
 // Platforms who want to declare more than 256 pins need to define EXTENDED_PIN_MODE globally

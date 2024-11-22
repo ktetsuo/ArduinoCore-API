@@ -22,12 +22,21 @@
 
 #include <stdint.h>
 
+#if defined(__GNUC__)
+#define PACK_PUSH __attribute__((packed))
+#define PACK_POP
+#elif defined(_MSC_VER)
+#define PACK_PUSH __pragma(pack(push, 1))
+#define PACK_POP __pragma(pack(pop))
+#endif
+
+
 namespace arduino {
 //================================================================================
 //================================================================================
 //  Low level API
 
-typedef struct __attribute__((packed))
+typedef PACK_PUSH struct
 {
   union {
     uint8_t bmRequestType;
@@ -43,6 +52,7 @@ typedef struct __attribute__((packed))
 	uint16_t 	wIndex;
 	uint16_t 	wLength;
 } USBSetup;
+PACK_POP
 
 }
 
